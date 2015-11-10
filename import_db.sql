@@ -1,13 +1,13 @@
 CREATE TABLE users (
   id INTEGER PRIMARY KEY,
   fname VARCHAR(30) NOT NULL,
-  lname VARCHAR(30) NOT NULL,
+  lname VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE questions (
   id INTEGER PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
-  body TEXT NOT NULL
+  body TEXT NOT NULL,
   author_id INTEGER NOT NULL,
 
   FOREIGN KEY(author_id) REFERENCES users(id)
@@ -42,3 +42,10 @@ CREATE TABLE questions_like (
   FOREIGN KEY(questions_id) REFERENCES questions(id)
   FOREIGN KEY(users_id) REFERENCES users(id)
 );
+
+INSERT INTO
+  users(fname, lname)
+VALUES
+  ('Harry', 'Potter'),
+  ('Kyle', 'Wilson'),
+  ('Jeff', 'Her');
