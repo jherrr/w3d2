@@ -1,8 +1,8 @@
-require_relative 'questions_database'
 require_relative 'questions'
 require_relative 'replies'
+require_relative 'model_base'
 
-class Users
+class Users < ModelBase
   attr_accessor :fname, :lname, :id
 
   def initialize(options = {'id' => nil})
@@ -25,27 +25,19 @@ class Users
   end
 
   def update
-    QuestionsDatabase.instance.execute(<<-SQL, fname, id)
+    QuestionsDatabase.instance.execute(<<-SQL, fname, lname, id)
       UPDATE
         users
       SET
-        fname = ?
+        fname = ?,
+        lname = ?
       WHERE
         users.id = ?
     SQL
   end
 
   def self.find_by_id(id)
-    result = QuestionsDatabase.instance.execute(<<-SQL, id)
-      SELECT
-        *
-      FROM
-        users
-      WHERE
-        users.id = ?
-    SQL
-
-    Users.new(result.first)
+    super(id, "users", self)
   end
 
   def self.find_by_name(fname, lname)
