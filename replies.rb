@@ -1,9 +1,22 @@
 class Replies
-  attr_accessor :questions_id, :reply_id, :author_id, :reply_id
+  attr_accessor :questions_id, :reply_id, :author_id, :reply_id, :id
 
   def initialize(options = {})
     @questions_id, @reply_id, @author_id, @reply_body = options.values_at(
     'questions_id', 'reply_id', 'author_id', 'reply_body')
+  end
+
+  def save
+    raise "reply alreay exist" if id
+
+    QuestionsDatabase.instance.execute(<<-SQL, questions_id, reply_id,author_id, reply_body)
+      INSERT INTO
+        replies (questions_id, repy_id, author_id, reply_body)
+      VALUES
+        (?, ?, ?, ?)
+    SQL
+
+    self.id = QuestionsDatabase.instance.last_insert_row_id
   end
 
   def self.find_by_id(id)
